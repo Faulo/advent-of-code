@@ -1,13 +1,10 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.4.33205.214
-MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "2022", "2022\2022.csproj", "{08DA8052-95E3-4DE1-BF5A-2008F210166B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "2022", "2022\2022.csproj", "{08DA8052-95E3-4DE1-BF5A-2008F210166B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "2019-20", "2019-20\2019-20.csproj", "{3AB9F181-2614-457D-8CA2-AA9620026F43}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "2021", "2021\src\test\csharp\2021.csproj", "{F969558D-9BAC-4010-BA3D-6EE4F019C694}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "2021", "2021\2021.csproj", "{BE375507-31CB-48B4-9519-FF08AB4656F0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "2019-20", "2019-20\2019-20.csproj", "{3AB9F181-2614-457D-8CA2-AA9620026F43}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,15 +20,9 @@ Global
 		{3AB9F181-2614-457D-8CA2-AA9620026F43}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3AB9F181-2614-457D-8CA2-AA9620026F43}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3AB9F181-2614-457D-8CA2-AA9620026F43}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BE375507-31CB-48B4-9519-FF08AB4656F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BE375507-31CB-48B4-9519-FF08AB4656F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BE375507-31CB-48B4-9519-FF08AB4656F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BE375507-31CB-48B4-9519-FF08AB4656F0}.Release|Any CPU.Build.0 = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {F7A1FF7E-7F5A-4229-830E-8D0ECD75676F}
+		{F969558D-9BAC-4010-BA3D-6EE4F019C694}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F969558D-9BAC-4010-BA3D-6EE4F019C694}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F969558D-9BAC-4010-BA3D-6EE4F019C694}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F969558D-9BAC-4010-BA3D-6EE4F019C694}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
