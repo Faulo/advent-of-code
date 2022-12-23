@@ -35,13 +35,15 @@ public sealed class ReactorReboot {
         (int x, int y, int z) max = new();
         for (var i = 0; i < cubes.Length; i++) {
             var cube = cubes[i];
-            min.x = Math.Min(min.x, cube.min.x);
-            min.y = Math.Min(min.y, cube.min.y);
-            min.z = Math.Min(min.z, cube.min.z);
+            if (cube.value) {
+                min.x = Math.Min(min.x, cube.min.x);
+                min.y = Math.Min(min.y, cube.min.y);
+                min.z = Math.Min(min.z, cube.min.z);
 
-            max.x = Math.Min(max.x, cube.max.x);
-            max.y = Math.Min(max.y, cube.max.y);
-            max.z = Math.Min(max.z, cube.max.z);
+                max.x = Math.Min(max.x, cube.max.x);
+                max.y = Math.Min(max.y, cube.max.y);
+                max.z = Math.Min(max.z, cube.max.z);
+            }
         }
         return Reboot(new Bounds(min, max));
     }
