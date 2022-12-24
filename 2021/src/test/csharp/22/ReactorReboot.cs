@@ -31,18 +31,39 @@ public sealed class ReactorReboot {
 
     public long CountRebootCubes() {
         // auto-detect bounds
+        var list = new List<Bounds>(cubes);
+
+        for (var currentIndex = 0; currentIndex < list.Count; currentIndex++) {
+            var wasDivided = false;
+            do {
+                for (var i = currentIndex + 1; i < list.Count; i++) {
+                    if (Bounds.TryDivide(list, currentIndex, i)) {
+                        wasDivided = true;
+                        break;
+                    }
+                }
+            } while (wasDivided);
+        }
+
+        // now, all bounds in list are not-overlapping, hopefully
+        long count = 0;
+        foreach (var bounds in list) {
+            if (bounds.value) {
+                count += bounds.positionCount;
+            }
+        }
+        return count;
+    }
+
+    public long CountRebootCubesAutoDetectBounds() {
         Vector3 min = new();
         Vector3 max = new();
-        for (var i = 0; i < cubes.Length; i++) {
-            var cube = cubes[i];
+        foreach (var cube in cubes) {
             if (cube.value) {
-                min.x = Math.Min(min.x, cube.min.x);
-                min.y = Math.Min(min.y, cube.min.y);
-                min.z = Math.Min(min.z, cube.min.z);
-
-                max.x = Math.Min(max.x, cube.max.x);
-                max.y = Math.Min(max.y, cube.max.y);
-                max.z = Math.Min(max.z, cube.max.z);
+                for (var j = 0; j < 3; j++) {
+                    min[j] = Math.Min(min[j], cube.min[j]);
+                    max[j] = Math.Min(max[j], cube.max[j]);
+                }
             }
         }
         return Reboot(new Bounds(min, max));
@@ -77,6 +98,28 @@ public sealed class ReactorReboot {
 }
 
 public struct Vector3 {
+    public int this[int i] {
+        get => i switch {
+            0 => x,
+            1 => y,
+            2 => z,
+            _ => throw new NotImplementedException(),
+        };
+        set {
+            switch (i) {
+                case 0:
+                    x = value;
+                    break;
+                case 1:
+                    y = value;
+                    break;
+                case 2:
+                    z = value;
+                    break;
+            }
+        }
+    }
+
     public int x;
     public int y;
     public int z;
@@ -102,11 +145,30 @@ public struct Vector3 {
 
 public readonly struct Bounds {
     public static bool TryDivide(List<Bounds> list, int i, int j) {
-        if (!list[i].OverlapsWith(list[j])) {
+        var lhs = list[i];
+        var rhs = list[j];
+
+        if (!lhs.value) {
+            // no need to divide if previous step is to turn OFF
+            return false;
+        }
+
+        if (!lhs.OverlapsWith(rhs)) {
+            // no need to divide if the bounds don't overlap
             return false;
         }
 
         return false;
+    }
+
+    public Bounds CreateIntersection(Bounds other, bool value) {
+        Vector3 min = new();
+        Vector3 max = new();
+        for (var i = 0; i < 3; i++) {
+            min[i] = Math.Max(other.min[i], this.min[i]);
+            max[i] = Math.Min(other.max[i], this.max[i]);
+        }
+        return new Bounds(min, max, value);
     }
 
     private bool OverlapsWith(Bounds bounds) {
