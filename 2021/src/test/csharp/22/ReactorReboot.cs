@@ -31,8 +31,8 @@ public sealed class ReactorReboot {
 
     public long CountRebootCubes() {
         // auto-detect bounds
-        (int x, int y, int z) min = new();
-        (int x, int y, int z) max = new();
+        Vector3 min = new();
+        Vector3 max = new();
         for (var i = 0; i < cubes.Length; i++) {
             var cube = cubes[i];
             if (cube.value) {
@@ -76,43 +76,105 @@ public sealed class ReactorReboot {
     }
 }
 
+public struct Vector3 {
+    public int x;
+    public int y;
+    public int z;
+
+    public Vector3(int x, int y, int z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
+    public static Vector3 operator +(Vector3 lhs, Vector3 rhs) {
+        return new(lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z);
+    }
+
+    public static Vector3 operator -(Vector3 lhs, Vector3 rhs) {
+        return new(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z);
+    }
+
+    public static Vector3 operator /(Vector3 lhs, int divisor) {
+        return new(lhs.x / divisor, lhs.y / divisor, lhs.z / divisor);
+    }
+}
+
 public readonly struct Bounds {
-    public long CountRebootCubes() => throw new NotImplementedException();
-    public Bounds Reboot(int size) => throw new NotImplementedException();
+    public static bool TryDivide(List<Bounds> list, int i, int j) {
+        if (!list[i].OverlapsWith(list[j])) {
+            return false;
+        }
 
-    public readonly (int x, int y, int z) min;
-    public readonly (int x, int y, int z) max;
+        return false;
+    }
+
+    private bool OverlapsWith(Bounds bounds) {
+        if (Contains(bounds.center) || bounds.Contains(center)) {
+            return true;
+        }
+        for (var i = 0; i < 8; i++) {
+            if (Contains(bounds.vertices[i]) || bounds.Contains(vertices[i])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public readonly Vector3 min;
+    public readonly Vector3 max;
+
+    public readonly Vector3 center;
+    public readonly Vector3 size;
+
+    public readonly Vector3[] vertices;
+
     public readonly bool value;
+    public readonly int positionCount;
 
-    public IEnumerable<(int x, int y, int z)> AllPositionsWithin {
+    public IEnumerable<Vector3> AllPositionsWithin {
         get {
             for (var x = min.x; x <= max.x; x++) {
                 for (var y = min.y; y <= max.y; y++) {
                     for (var z = min.z; z <= max.z; z++) {
-                        yield return (x, y, z);
+                        yield return new(x, y, z);
                     }
                 }
             }
         }
     }
 
-    public bool Contains((int x, int y, int z) position) {
+    public bool Contains(Vector3 position) {
         return position.x >= min.x && position.x <= max.x
             && position.y >= min.y && position.y <= max.y
             && position.z >= min.z && position.z <= max.z;
     }
 
     public Bounds(int extends)
-        : this((-extends, -extends, -extends), (extends, extends, extends)) {
+        : this(new(-extends, -extends, -extends), new(extends, extends, extends)) {
     }
 
     public Bounds(string minX, string maxX, string minY, string maxY, string minZ, string maxZ, string onOrOff)
-        : this((int.Parse(minX), int.Parse(minY), int.Parse(minZ)), (int.Parse(maxX), int.Parse(maxY), int.Parse(maxZ)), onOrOff == "on") {
+        : this(new(int.Parse(minX), int.Parse(minY), int.Parse(minZ)), new(int.Parse(maxX), int.Parse(maxY), int.Parse(maxZ)), onOrOff == "on") {
     }
 
-    public Bounds((int x, int y, int z) min, (int x, int y, int z) max, bool value = false) {
+    public Bounds(Vector3 min, Vector3 max, bool value = false) {
         this.min = min;
         this.max = max;
         this.value = value;
+
+        center = (min + max) / 2;
+        size = max - min;
+        positionCount = size.x * size.y * size.z;
+        vertices = new[] {
+            min + new Vector3(0, 0, 0),
+            min + new Vector3(size.x, 0, 0),
+            min + new Vector3(0, size.y, 0),
+            min + new Vector3(size.x, size.y, 0),
+            min + new Vector3(0, 0, size.z),
+            min + new Vector3(size.x, 0, size.z),
+            min + new Vector3(0, size.y, size.z),
+            min + new Vector3(size.x, size.y, size.z),
+        };
     }
 }
